@@ -494,6 +494,7 @@
     <script type="text/javascript" src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/plugins.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/script.js') }}"></script>
+    @stack('js')
 </body>
 
 </html>
