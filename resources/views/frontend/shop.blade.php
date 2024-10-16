@@ -24,21 +24,6 @@
         <div class="container">
             <div class="row">
                 <main class="col-md-9">
-                    <div class="filter-shop d-flex justify-content-between">
-                        <div class="sort-by">
-                            <select id="input-sort" class="form-control" data-filter-sort="" data-filter-order="">
-                                <option value="">Default sorting</option>
-                                <option value="">Name (A - Z)</option>
-                                <option value="">Name (Z - A)</option>
-                                <option value="">Price (Low-High)</option>
-                                <option value="">Price (High-Low)</option>
-                                <option value="">Rating (Highest)</option>
-                                <option value="">Rating (Lowest)</option>
-                                <option value="">Model (A - Z)</option>
-                                <option value="">Model (Z - A)</option>
-                            </select>
-                        </div>
-                    </div>
                     <div class="product-content product-store d-flex justify-content-between flex-wrap">
                         @foreach ($products as $product)
                             <div class="col-lg-4 col-md-6">
@@ -86,77 +71,29 @@
                             </div>
                         </div>
                         <div class="widget-product-categories pt-5">
-                            <h5 class="widget-title text-decoration-underline text-uppercase">Categories</h5>
-                            <ul class="product-categories sidebar-list list-unstyled">
-                                <li class="cat-item">
-                                    <a href="/collections/categories">All</a>
-                                </li>
-                                <li class="cat-item">
-                                    <a href="">Phones</a>
-                                </li>
-                                <li class="cat-item">
-                                    <a href="">Accessories</a>
-                                </li>
-                                <li class="cat-item">
-                                    <a href="">Tablets</a>
-                                </li>
-                                <li class="cat-item">
-                                    <a href="">Watches</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="widget-product-tags pt-3">
-                            <h5 class="widget-title text-decoration-underline text-uppercase">Tags</h5>
-                            <ul class="product-tags sidebar-list list-unstyled">
-                                <li class="tags-item">
-                                    <a href="">White</a>
-                                </li>
-                                <li class="tags-item">
-                                    <a href="">Cheap</a>
-                                </li>
-                                <li class="tags-item">
-                                    <a href="">Mobile</a>
-                                </li>
-                                <li class="tags-item">
-                                    <a href="">Modern</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="widget-product-brands pt-3">
-                            <h5 class="widget-title text-decoration-underline text-uppercase">Brands</h5>
-                            <ul class="product-tags sidebar-list list-unstyled">
-                                <li class="tags-item">
-                                    <a href="">Apple</a>
-                                </li>
-                                <li class="tags-item">
-                                    <a href="">Samsung</a>
-                                </li>
-                                <li class="tags-item">
-                                    <a href="">Huwai</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="widget-price-filter pt-3">
-                            <h5 class="widget-titlewidget-title text-decoration-underline text-uppercase">Filter By
-                                Price
-                            </h5>
-                            <ul class="product-tags sidebar-list list-unstyled">
-                                <li class="tags-item">
-                                    <a href="">Less than $10</a>
-                                </li>
-                                <li class="tags-item">
-                                    <a href="">$10- $20</a>
-                                </li>
-                                <li class="tags-item">
-                                    <a href="">$20- $30</a>
-                                </li>
-                                <li class="tags-item">
-                                    <a href="">$30- $40</a>
-                                </li>
-                                <li class="tags-item">
-                                    <a href="">$40- $50</a>
-                                </li>
-                            </ul>
+                            <h3 class="mb-4">Search by Image</h3>
+                            <form class="form1" method="post" action="{{ route('photo.store') }}"
+                                enctype="multipart/form-data">
+                                @csrf
+                                <div class="form-group col-md-12 mb-3">
+                                    <div class="avatar-upload">
+                                        <div>
+                                            <input type='file' id="imageUpload" name="nama" accept=".png, .jpg, .jpeg"
+                                                onchange="previewImage(this)" />
+                                            <label for="imageUpload"></label>
+                                        </div>
+                                        <div class="avatar-preview my-4">
+                                            <div id="imagePreview"
+                                                style="background-image: url('{{ url('/img/avatar.png') }}')">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @error('photo')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <input type="submit" class="btn btn-primary" value="Submit">
+                            </form>
                         </div>
                     </div>
                 </aside>
@@ -164,3 +101,41 @@
         </div>
     </section>
 @endsection
+@push('js')
+    <script type="text/javascript">
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    $("#imagePreview").css('background-image', 'url(' + e.target.result + ')');
+                    $("#imagePreview").hide();
+                    $("#imagePreview").fadeIn(700);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+@endpush
+<style>
+    .avatar-upload {
+        position: relative;
+        max-width: 205px;
+    }
+
+    .avatar-upload .avatar-preview {
+        width: 67%;
+        height: 147px;
+        position: relative;
+        border-radius: 3%;
+        border: 6px solid #F8F8F8;
+    }
+
+    .avatar-upload .avatar-preview>div {
+        width: 100%;
+        height: 100%;
+        border-radius: 3%;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+</style>

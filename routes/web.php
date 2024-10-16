@@ -29,6 +29,8 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/shop', action: [ProductController::class, 'index'])->name('shop');
 Route::get('/product/{id}', action: [ProductController::class, 'single'])->name('single');
+Route::get('/detect-image', [ProductController::class, 'detectImage'])->name('detect');
+Route::post('/up-foto', [ProductController::class, 'store_photo'])->name('photo.store');
 
 Route::get('/', function () {
     return view('frontend.home');
