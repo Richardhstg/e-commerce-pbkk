@@ -11,6 +11,7 @@
     <meta name="author" content="">
     <meta name="keywords" content="">
     <meta name="description" content="">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('style.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/shop.css') }}">
@@ -514,33 +515,53 @@
         <hr>
     </footer>
 
-    <script>
-  document.getElementById('send-btn').addEventListener('click', () => {
+
+<script>
+document.getElementById('send-btn').addEventListener('click', () => {
     const inputField = document.getElementById('chat-input');
     const message = inputField.value;
     const messagesContainer = document.getElementById('messages');
-    
+
     if (message.trim() !== '') {
-      // Tampilkan pesan user
-      const userMessage = document.createElement('div');
-      userMessage.textContent = "You: " + message;
-      userMessage.className = 'user-message';
-      messagesContainer.appendChild(userMessage);
-      
-      // Respon dari chatbot
-      const botMessage = document.createElement('div');
-      botMessage.textContent = "Bot: Saya di sini untuk membantu!";
-      botMessage.className = 'bot-message';
-      messagesContainer.appendChild(botMessage);
-      
-      // Bersihkan input field
-      inputField.value = '';
-      
-      // Scroll ke bawah untuk pesan baru
-      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        // Tampilkan pesan user
+        const userMessage = document.createElement('div');
+        userMessage.textContent = "You: " + message;
+        userMessage.className = 'user-message';
+        messagesContainer.appendChild(userMessage);
+
+        // Kirim pesan ke server untuk mendapatkan respons
+        fetch('/chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            },
+            body: JSON.stringify({ message: message }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                // Tampilkan pesan bot
+                const botMessage = document.createElement('div');
+                botMessage.textContent = "Bot: " + data.reply;
+                botMessage.className = 'bot-message';
+                messagesContainer.appendChild(botMessage);
+
+                // Scroll ke bawah untuk pesan baru
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                const botMessage = document.createElement('div');
+                botMessage.textContent = "Bot: Maaf, ada kesalahan dalam memproses permintaan Anda.";
+                botMessage.className = 'bot-message';
+                messagesContainer.appendChild(botMessage);
+            });
+
+        // Bersihkan input field
+        inputField.value = '';
     }
-  });
-</script>
+});
+</script> 
 
     <script src="{{ asset('js/jquery-1.11.0.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>

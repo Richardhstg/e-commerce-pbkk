@@ -10,10 +10,13 @@ use App\Http\Controllers\TemplateController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\ChatbotController;
 
 // Route::get('/', function () {
 //     return view('welcome');
 // });
+
+Route::post('/chat', [ChatbotController::class, 'handleChat']);
 
 Route::get('/dashboard', function () {
     return view('dashboard');
