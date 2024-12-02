@@ -14,6 +14,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('style.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/shop.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/chatbot.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/vendor.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -211,6 +212,9 @@
                                         <a href="{{ route('cart') }}" class="dropdown-item">Cart</a>
                                     </li>
                                     <li>
+                                        <a class="dropdown-item" href="#" data-bs-toggle="offcanvas" data-bs-target="#chatBotCanvas">ChatBot</a>
+                                    </li>
+                                    <li>
                                         <a href="{{ route('checkout') }}" class="dropdown-item">Checkout</a>
                                     </li>
                                     <li>
@@ -284,6 +288,27 @@
             </div>
         </nav>
     </header>
+
+    <!-- Offcanvas untuk ChatBot -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="chatBotCanvas" aria-labelledby="chatBotCanvasLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="chatBotCanvasLabel">ChatBot</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <div id="chat-container">
+      <!-- Kotak Chat -->
+      <div id="chatbox">
+        <div id="messages"></div>
+      </div>
+      <!-- Input Chat -->
+      <div class="input-group mt-3">
+        <input type="text" id="chat-input" class="form-control" placeholder="Type your message...">
+        <button class="btn btn-primary" id="send-btn">Send</button>
+      </div>
+    </div>
+  </div>
+</div>
 
     @yield('main-content')
 
@@ -488,6 +513,34 @@
         </div>
         <hr>
     </footer>
+
+    <script>
+  document.getElementById('send-btn').addEventListener('click', () => {
+    const inputField = document.getElementById('chat-input');
+    const message = inputField.value;
+    const messagesContainer = document.getElementById('messages');
+    
+    if (message.trim() !== '') {
+      // Tampilkan pesan user
+      const userMessage = document.createElement('div');
+      userMessage.textContent = "You: " + message;
+      userMessage.className = 'user-message';
+      messagesContainer.appendChild(userMessage);
+      
+      // Respon dari chatbot
+      const botMessage = document.createElement('div');
+      botMessage.textContent = "Bot: Saya di sini untuk membantu!";
+      botMessage.className = 'bot-message';
+      messagesContainer.appendChild(botMessage);
+      
+      // Bersihkan input field
+      inputField.value = '';
+      
+      // Scroll ke bawah untuk pesan baru
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+  });
+</script>
 
     <script src="{{ asset('js/jquery-1.11.0.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
